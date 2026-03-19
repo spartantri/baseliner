@@ -13,10 +13,10 @@ echo "Installing initial packages"
 sudo apt-get update -y
 sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap
 
-# Golang 1.22 install
+# Golang 1.24 install
 echo "Installing Golang 1.22"
-sudo wget https://go.dev/dl/go1.22.0.linux-amd64.tar.gz
-sudo tar -C /usr/local/ -xvf go1.22.0.linux-amd64.tar.gz
+sudo wget https://go.dev/dl/go1.24.3.linux-amd64.tar.gz
+sudo tar -C /usr/local/ -xvf go1.24.3.linux-amd64.tar.gz
 echo "export GOROOT=/usr/local/go" >> /home/ubuntu/.profile
 echo "export GOPATH=$HOME/go" >> /home/ubuntu/.profile
 echo "export PATH=$PATH:/usr/local/go/bin" >> /home/ubuntu/.profile
