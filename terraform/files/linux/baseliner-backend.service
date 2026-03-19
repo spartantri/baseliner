@@ -1,0 +1,16 @@
+[Unit]
+Description=Baseliner Backend API
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/baseliner
+Environment="PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin"
+ExecStart=/home/ubuntu/baseliner/.venv/bin/python /home/ubuntu/baseliner/web_backend.py
+Restart=always
+RestartSec=5
+
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

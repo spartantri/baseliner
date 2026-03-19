@@ -9,9 +9,19 @@ HOME=/home/ubuntu
 echo "Setting HOME to $HOME"
 
 echo "Start bootstrap script for Linux ${linux_os}"
+
+# OS tuning
+sudo sysctl -w net.core.rmem_max=134217728
+sudo sysctl -w net.core.wmem_max=134217728
+sudo sysctl -w net.core.netdev_max_backlog=250000
+
+# Install packages
 echo "Installing initial packages"
 sudo apt-get update -y
-sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap
+sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap python3-pip python3.12-venvchromium-browser
+sudo -u ubuntu mkdir /home/ubuntu/baseliner
+sudo -u ubuntu python3 -m venv /home/ubuntu/baseliner/.venv
+echo "source /home/ubuntu/baseliner/.venv/bin/activate" >> /home/ubuntu/.bashrc
 
 # Golang 1.24 install
 echo "Installing Golang 1.22"
@@ -48,17 +58,33 @@ go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
 sudo -u ubuntu -H bash -c '
 export GOROOT=/usr/local/go
 export GOPATH=/home/ubuntu/go
-export PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin
+export PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin:/home/ubuntu/.pdtm/go/bin/
 go install -v github.com/sensepost/gowitness@latest
 '
 
 # Set permissions
 chown -R ubuntu /home/ubuntu
 
-# OS tuning
-sudo sysctl -w net.core.rmem_max=134217728
-sudo sysctl -w net.core.wmem_max=134217728
-sudo sysctl -w net.core.netdev_max_backlog=250000
+# Install systemd services
+cat <<'EOF' >/etc/systemd/system/baseliner-frontend.service
+${baseliner_frontend_service}
+EOF
+
+cat <<'EOF' >/etc/systemd/system/baseliner-backend.service
+${baseliner_backend_service}
+EOF
+
+chmod 644 /etc/systemd/system/baseliner-frontend.service
+chmod 644 /etc/systemd/system/baseliner-backend.service
+
+systemctl daemon-reexec
+systemctl daemon-reload
+
+systemctl enable baseliner-frontend
+systemctl enable baseliner-backend
+
+systemctl start baseliner-frontend
+systemctl start baseliner-backend
 
 echo "Bootstrap completed"
 touch /home/ubuntu/bootstrap.done

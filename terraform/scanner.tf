@@ -71,6 +71,8 @@ data "template_file" "ubuntu" {
   vars = {
     region    = var.region
     linux_os  = "ubuntu"
+    baseliner_frontend_service = file("${path.module}/files/linux/baseliner-frontend.service")
+    baseliner_backend_service  = file("${path.module}/files/linux/baseliner-backend.service")
   }
 }
 
@@ -113,7 +115,7 @@ Instance     ${i + 1}
 Public IP:   ${instance.public_ip}
 Private IP:  ${instance.private_ip}
 Instance ID: ${instance.id}
-SSH command: ssh -i operator-${local.rs}.pem ubuntu@${instance.public_ip}
+SSH command: ssh -i operator-${local.rs}.pem -L 7170:127.0.0.1:7170 -L 7171:127.0.0.1:7171  -L 8501:127.0.0.1:8501 ubuntu@${instance.public_ip}
 %{ endfor ~}
 SCANNER
 }

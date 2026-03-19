@@ -1,0 +1,16 @@
+[Unit]
+Description=Baseliner Web Frontend
+After=network.target baseliner-backend.service
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/baseliner
+Environment="PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin"
+ExecStart=/home/ubuntu/baseliner/.venv/bin/streamlit run web_frontend.py --server.address 127.0.0.1 --server.port 8501
+Restart=always
+RestartSec=5
+
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
