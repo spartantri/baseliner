@@ -1,6 +1,31 @@
 # baseliner
 Baseline networks
 
+## Use locally
+```bash
+# Install updates and base tools
+sudo apt-get update -y
+sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap
+
+# Install pdtm
+echo "Installing pdtm"
+go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
+~/go/bin/pdtm -install-all
+
+# OS config
+sudo sysctl -w net.core.rmem_max=134217728
+sudo sysctl -w net.core.wmem_max=134217728
+sudo sysctl -w net.core.netdev_max_backlog=250000
+```
+
+## Deploy it in the cloud
+```bash
+cd terraform
+terraform init
+terraform plan -out=run.plan
+terraform apply run.plan
+```
+
 ## ip_baseliner
 ```
 Usage:
