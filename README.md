@@ -23,7 +23,7 @@ sudo sysctl -w net.core.netdev_max_backlog=250000
 cd terraform
 terraform init
 terraform plan -out=run.plan
-terraform apply run.plan
+terraform apply "run.plan"
 ```
 
 ## ip_baseliner
