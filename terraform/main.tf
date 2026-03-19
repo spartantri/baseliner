@@ -35,6 +35,6 @@ module "key_pair" {
 # write ssh key to file
 resource "local_file" "ssh_key" {
   content         = tls_private_key.operator.private_key_pem
-  filename        = "${path.module}/ssh_key.pem"
+  filename        = "${path.module}/operator-${local.rs}.pem"
   file_permission = "0600"
 }
