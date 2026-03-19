@@ -26,10 +26,25 @@ echo "export HOME=/home/ubuntu" >> /home/ubuntu/.bashrc
 source /home/ubuntu/.profile
 source /home/ubuntu/.bashrc
 
+# Install massdns
+cd /home/ubuntu
+git clone https://github.com/blechschmidt/massdns.git
+cd massdns
+make
+make install
+
 # Install pdtm
 echo "Installing pdtm"
 go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
+source ~/.bashrc
 ~/go/bin/pdtm -install-all
+source ~/.bashrc
+echo "source ~/.bashrc" >> ~/.bash_profile
+source ~/.bash_profile
+echo "source ~/.bashrc" >> ~/.profile
+source ~/.profile
+chown -R ubuntu:ubuntu /home/ubuntu/.config
+
 
 # OS config
 sudo sysctl -w net.core.rmem_max=134217728

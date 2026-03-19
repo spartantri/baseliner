@@ -16,7 +16,8 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+    # values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
   }
 
   filter {
@@ -85,6 +86,7 @@ output "details_scan_ec2" {
 scan-ec2
 ----------------
 %{ for i, instance in aws_instance.ubuntu ~}
+
 Instance     ${i + 1}
 Public IP:   ${instance.public_ip}
 Private IP:  ${instance.private_ip}
