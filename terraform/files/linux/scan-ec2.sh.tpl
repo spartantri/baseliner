@@ -16,9 +16,15 @@ sudo sysctl -w net.core.wmem_max=134217728
 sudo sysctl -w net.core.netdev_max_backlog=250000
 
 # Install packages
+# Wait for apt to be ready
+echo "Waiting for apt lock..."
+while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+  sleep 2
+done
+
 echo "Installing initial packages"
 sudo apt-get update -y
-sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap python3-pip python3.12-venvchromium-browser
+sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap python3-pip python3.12-venv chromium-browser
 sudo -u ubuntu mkdir /home/ubuntu/baseliner
 sudo -u ubuntu python3 -m venv /home/ubuntu/baseliner/.venv
 echo "source /home/ubuntu/baseliner/.venv/bin/activate" >> /home/ubuntu/.bashrc
@@ -66,11 +72,11 @@ go install -v github.com/sensepost/gowitness@latest
 chown -R ubuntu /home/ubuntu
 
 # Install systemd services
-cat <<'EOF' >/etc/systemd/system/baseliner-frontend.service
+cat <<EOF >/etc/systemd/system/baseliner-frontend.service
 ${baseliner_frontend_service}
 EOF
 
-cat <<'EOF' >/etc/systemd/system/baseliner-backend.service
+cat <<EOF >/etc/systemd/system/baseliner-backend.service
 ${baseliner_backend_service}
 EOF
 
