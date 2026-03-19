@@ -7,6 +7,13 @@ variable "instance_count" {
   default = 1
 }
 
+variable "wait_for_completion" {
+  description = "Wait for all isntances to be ready."
+  type        = number
+  # Set to 1 to wait
+  default     = 0
+}
+
 # Random pet name for resources
 resource "random_pet" "suffix" {
   length    = 2

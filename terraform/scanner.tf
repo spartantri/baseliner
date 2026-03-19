@@ -81,7 +81,7 @@ resource "local_file" "ubuntu" {
 }
 
 resource "null_resource" "ubuntu_healthcheck" {
-  count = var.instance_count
+  count = var.wait_for_completion == 1 ? var.instance_count : 0
   depends_on = [aws_instance.ubuntu]
 
   connection {
