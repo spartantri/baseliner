@@ -45,6 +45,8 @@ echo "source ~/.bashrc" >> ~/.profile
 source ~/.profile
 chown -R ubuntu:ubuntu /home/ubuntu/.config
 
+# Install gowitness
+go install -v github.com/sensepost/gowitness@latest
 
 # OS config
 sudo sysctl -w net.core.rmem_max=134217728

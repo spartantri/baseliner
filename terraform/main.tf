@@ -22,7 +22,7 @@ output "aws_region" {
 }
 
 resource "tls_private_key" "operator" {
-  algorithm = "ED25519"
+  algorithm = "RSA"
 }
 
 module "key_pair" {
