@@ -26,6 +26,11 @@ echo "Installing initial packages"
 sudo apt-get update -y
 sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap python3-pip python3.12-venv chromium-browser
 sudo -u ubuntu mkdir /home/ubuntu/baseliner
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/ip_baseliner.sh -o /home/ubuntu/baseliner/ip_baseliner.sh
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/requirements.txt -o /home/ubuntu/baseliner/requirements.txt
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_frontend.py -o /home/ubuntu/baseliner/web_frontend.py
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_backend.py -o /home/ubuntu/baseliner/web_backend.py
+chmod +x /home/ubuntu/baseliner/*.py /home/ubuntu/baseliner/*.sh
 sudo -u ubuntu python3 -m venv /home/ubuntu/baseliner/.venv
 echo "source /home/ubuntu/baseliner/.venv/bin/activate" >> /home/ubuntu/.bashrc
 
