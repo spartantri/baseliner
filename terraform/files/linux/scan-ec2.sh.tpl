@@ -61,3 +61,5 @@ sudo sysctl -w net.core.wmem_max=134217728
 sudo sysctl -w net.core.netdev_max_backlog=250000
 
 echo "Bootstrap completed"
+touch /home/ubuntu/bootstrap.done
+chown ubuntu:ubuntu /home/ubuntu/bootstrap.done

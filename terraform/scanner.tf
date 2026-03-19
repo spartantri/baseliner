@@ -80,6 +80,28 @@ resource "local_file" "ubuntu" {
   filename = "${path.module}/output/linux/scan.sh"
 }
 
+resource "null_resource" "ubuntu_healthcheck" {
+  count = var.instance_count
+  depends_on = [aws_instance.ubuntu]
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.operator.private_key_pem
+    host        = aws_instance.ubuntu[count.index].public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'Waiting for bootstrap to complete...'",
+      "while [ ! -f /home/ubuntu/bootstrap.done ]; do sleep 5; done",
+      "echo 'Bootstrap completed on instance ${count.index + 1}'"
+    ]
+  }
+}
+
+
+
 output "details_scan_ec2" {
   value = <<SCANNER
 ----------------
