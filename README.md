@@ -26,6 +26,11 @@ terraform plan -out=run.plan
 terraform apply "run.plan"
 ```
 
+### Replace instances
+```bash
+terraform apply -replace="aws_instance.ubuntu[0]"
+```
+
 ## ip_baseliner
 ```
 Usage:

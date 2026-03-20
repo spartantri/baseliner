@@ -26,10 +26,10 @@ echo "Installing initial packages"
 sudo apt-get update -y
 sudo apt-get install -y net-tools unzip masscan jq build-essential libpcap-dev nmap python3-pip python3.12-venv chromium-browser
 sudo -u ubuntu mkdir /home/ubuntu/baseliner
-sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/ip_baseliner.sh -o /home/ubuntu/baseliner/ip_baseliner.sh
-sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/requirements.txt -o /home/ubuntu/baseliner/requirements.txt
-sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_frontend.py -o /home/ubuntu/baseliner/web_frontend.py
-sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_backend.py -o /home/ubuntu/baseliner/web_backend.py
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/ip_baseliner.sh -O /home/ubuntu/baseliner/ip_baseliner.sh
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/requirements.txt -O /home/ubuntu/baseliner/requirements.txt
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_frontend.py -O /home/ubuntu/baseliner/web_frontend.py
+sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_backend.py -O /home/ubuntu/baseliner/web_backend.py
 chmod +x /home/ubuntu/baseliner/*.py /home/ubuntu/baseliner/*.sh
 sudo -u ubuntu python3 -m venv /home/ubuntu/baseliner/.venv
 echo "source /home/ubuntu/baseliner/.venv/bin/activate" >> /home/ubuntu/.bashrc
@@ -41,7 +41,7 @@ sudo wget https://go.dev/dl/go1.24.3.linux-amd64.tar.gz
 sudo tar -C /usr/local/ -xvf go1.24.3.linux-amd64.tar.gz
 echo "export GOROOT=/usr/local/go" >> /home/ubuntu/.profile
 echo "export GOPATH=$HOME/go" >> /home/ubuntu/.profile
-echo "export PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin" >> /home/ubuntu/.profile
+echo "export PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin:/home/ubuntu/.pdtm/go/bin" >> /home/ubuntu/.profile
 echo "export GOCACHE=/home/ubuntu/go/cache" >> /home/ubuntu/.profile
 echo "export HOME=/home/ubuntu" >> /home/ubuntu/.profile
 echo "export HOME=/home/ubuntu" >> /home/ubuntu/.bashrc
@@ -69,7 +69,7 @@ go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
 sudo -u ubuntu -H bash -c '
 export GOROOT=/usr/local/go
 export GOPATH=/home/ubuntu/go
-export PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin:/home/ubuntu/.pdtm/go/bin/
+export PATH=$PATH:/usr/local/go/bin:/home/ubuntu/go/bin:/home/ubuntu/.pdtm/go/bin
 go install -v github.com/sensepost/gowitness@latest
 '
 
