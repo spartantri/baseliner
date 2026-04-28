@@ -2,6 +2,19 @@ variable "region" {
   default = "us-east-2"
 }
 
+variable "src_ip" {
+  description = "Override the default source IP (set via TF_VAR_src_ip)"
+  type        = string
+  default     = "" # Empty by default to use calling ip defined in sg.tf
+}
+
+
+variable "mgmt_ip" {
+  description = "Override the default source IP (set via TF_VAR_mgmt_ip)"
+  type        = string
+  default     = "" # Empty by default to use calling ip defined in sg.tf
+}
+
 variable "instance_count" {
   description = "Number of scan instances to deploy."
   default = 1
