@@ -32,6 +32,7 @@ sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/
 sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_backend.py -O /home/ubuntu/baseliner/web_backend.py
 chmod +x /home/ubuntu/baseliner/*.py /home/ubuntu/baseliner/*.sh
 sudo -u ubuntu python3 -m venv /home/ubuntu/baseliner/.venv
+sudo -u ubuntu /home/ubuntu/baseliner/.venv/bin/python -m pip install -q -r /home/ubuntu/baseliner/requirements.txt
 echo "source /home/ubuntu/baseliner/.venv/bin/activate" >> /home/ubuntu/.bashrc
 
 # Golang 1.24 install
