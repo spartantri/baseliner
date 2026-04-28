@@ -1,3 +1,12 @@
+locals {
+  user_data_rendered = templatefile("${path.module}/files/linux/scan-ec2.sh.tpl", {
+    region                     = var.region
+    linux_os                   = "ubuntu"
+    baseliner_frontend_service = file("${path.module}/files/linux/baseliner-frontend.service")
+    baseliner_backend_service  = file("${path.module}/files/linux/baseliner-backend.service")
+  })
+}
+
 # The terraform file that creates a Linux instance for scanning
 variable "instance_type_ubuntu" {
   description = "The AWS instance type to use for servers."
@@ -61,24 +70,13 @@ resource "aws_instance" "ubuntu" {
     delete_on_termination = "true"
   }
 
-  user_data = data.template_file.ubuntu.rendered
+  user_data = local.user_data_rendered
 
-}
-
-data "template_file" "ubuntu" {
-  template = file("${path.module}/files/linux/scan-ec2.sh.tpl")
-
-  vars = {
-    region    = var.region
-    linux_os  = "ubuntu"
-    baseliner_frontend_service = file("${path.module}/files/linux/baseliner-frontend.service")
-    baseliner_backend_service  = file("${path.module}/files/linux/baseliner-backend.service")
-  }
 }
 
 resource "local_file" "ubuntu" {
   # For inspecting the rendered bash script as it is loaded onto linux system
-  content = data.template_file.ubuntu.rendered
+  content = local.user_data_rendered
   filename = "${path.module}/output/linux/scan.sh"
 }
 
