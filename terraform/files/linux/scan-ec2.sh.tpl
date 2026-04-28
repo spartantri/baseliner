@@ -97,6 +97,39 @@ systemctl enable baseliner-backend
 systemctl start baseliner-frontend
 systemctl start baseliner-backend
 
+# Enable tunneling
+CONFIG_FILE="/etc/ssh/sshd_config"
+SEARCH_STRING="Match User mrivas,cmcgranahan,dthompson"
+BLOCK_TO_ADD="
+Match User ubuntu
+  AllowTcpForwarding yes
+  DisableForwarding no
+  PermitOpen 127.0.0.1:7170
+  PermitOpen 127.0.0.1:7171
+  PermitOpen 127.0.0.1:8501
+"
+
+echo "Checking $CONFIG_FILE for the required Match User block..."
+# Use grep to check if the specific Match line already exists
+if grep -qF "$SEARCH_STRING" "$CONFIG_FILE"; then
+    echo "Status: The configuration is already present. No changes made."
+else
+    echo "Status: Configuration not found. Appending to $CONFIG_FILE..."
+    # Use sudo tee -a to safely append the multi-line string
+    echo "$BLOCK_TO_ADD" | tee -a "$CONFIG_FILE" > /dev/null
+    echo "Success: Configuration added."
+    # Verify the syntax of the SSH configuration to ensure no lockouts
+    echo "Testing SSH configuration syntax..."
+    if sshd -t; then
+        echo "Syntax OK! Restarting the SSH service..." 
+        # Restart the service as requested
+        systemctl restart sshd
+        echo "Service restarted successfully."
+    else
+        echo "WARNING: SSH configuration syntax check failed! Aborting restart. Please review $CONFIG_FILE immediately."
+    fi
+fi
+
 echo "Bootstrap completed"
 touch /home/ubuntu/bootstrap.done
 chown ubuntu:ubuntu /home/ubuntu/bootstrap.done
