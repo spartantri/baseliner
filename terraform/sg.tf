@@ -4,9 +4,11 @@ data "http" "source_ip" {
 }
 
 locals {
-  #src_ip = "${chomp(data.http.source_ip.response_body)}/32"
-  src_ip = "0.0.0.0/0"
+  # Logic: If var.src_ip is provided, use it; otherwise, use the dynamic IP of deploying system
+  src_ip = var.src_ip != "" ? var.src_ip : "${chomp(data.http.source_ip.response_body)}/32" 
+  mgmt_ip = var.mgmt_ip != "" ? var.mgmt_ip : "${chomp(data.http.source_ip.response_body)}/32" 
 }
+
 
 # Generic security group for linux systems
 resource "aws_security_group" "linux_ingress" {
@@ -21,7 +23,7 @@ resource "aws_security_group" "linux_ingress" {
     cidr_blocks     = [local.src_ip]
   }
 
-  # Jenkins Port 8080
+  # Other http Port 8080
   ingress {
     from_port       = 8080
     to_port         = 8080
@@ -62,6 +64,14 @@ resource "aws_security_group" "linux_ssh_ingress" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = [local.src_ip]
+  }
+
+  
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [local.mgmt_ip]
   }
 
   ingress {
