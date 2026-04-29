@@ -1,6 +1,6 @@
 #!/bin/bash
 # Custom bootstrap script for Ubuntu Linux
-
+INITIAL_TS=$(date +"%Y-%m-%dT%H:%M:%S%z")
 set -e
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
@@ -32,7 +32,6 @@ sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/
 sudo -u ubuntu wget https://raw.githubusercontent.com/spartantri/baseliner/refs/heads/main/baseliner/web_backend.py -O /home/ubuntu/baseliner/web_backend.py
 chmod +x /home/ubuntu/baseliner/*.py /home/ubuntu/baseliner/*.sh
 sudo -u ubuntu python3 -m venv /home/ubuntu/baseliner/.venv
-sudo -u ubuntu /home/ubuntu/baseliner/.venv/bin/python -m pip install -q -r /home/ubuntu/baseliner/requirements.txt
 echo "source /home/ubuntu/baseliner/.venv/bin/activate" >> /home/ubuntu/.bashrc
 
 # Golang 1.24 install
@@ -98,39 +97,7 @@ systemctl enable baseliner-backend
 systemctl start baseliner-frontend
 systemctl start baseliner-backend
 
-# Enable tunneling
-CONFIG_FILE="/etc/ssh/sshd_config"
-SEARCH_STRING="Match User mrivas,cmcgranahan,dthompson"
-BLOCK_TO_ADD="
-Match User ubuntu
-  AllowTcpForwarding yes
-  DisableForwarding no
-  PermitOpen 127.0.0.1:7170
-  PermitOpen 127.0.0.1:7171
-  PermitOpen 127.0.0.1:8501
-"
-
-echo "Checking $CONFIG_FILE for the required Match User block..."
-# Use grep to check if the specific Match line already exists
-if grep -qF "$SEARCH_STRING" "$CONFIG_FILE"; then
-    echo "Status: The configuration is already present. No changes made."
-else
-    echo "Status: Configuration not found. Appending to $CONFIG_FILE..."
-    # Use sudo tee -a to safely append the multi-line string
-    echo "$BLOCK_TO_ADD" | tee -a "$CONFIG_FILE" > /dev/null
-    echo "Success: Configuration added."
-    # Verify the syntax of the SSH configuration to ensure no lockouts
-    echo "Testing SSH configuration syntax..."
-    if sshd -t; then
-        echo "Syntax OK! Restarting the SSH service..." 
-        # Restart the service as requested
-        systemctl restart sshd
-        echo "Service restarted successfully."
-    else
-        echo "WARNING: SSH configuration syntax check failed! Aborting restart. Please review $CONFIG_FILE immediately."
-    fi
-fi
-
-echo "Bootstrap completed"
+FINAL_TS=$(date +"%Y-%m-%dT%H:%M:%S%z")
+echo "Bootstrap completed / $INITIAL_TS to $FINAL_TS"
 touch /home/ubuntu/bootstrap.done
 chown ubuntu:ubuntu /home/ubuntu/bootstrap.done
