@@ -98,6 +98,5 @@ systemctl start baseliner-frontend
 systemctl start baseliner-backend
 
 FINAL_TS=$(date +"%Y-%m-%dT%H:%M:%S%z")
-echo "Bootstrap completed / $INITIAL_TS to $FINAL_TS"
-touch /home/ubuntu/bootstrap.done
+echo "Bootstrap completed / $INITIAL_TS to $FINAL_TS" > /home/ubuntu/bootstrap.done
 chown ubuntu:ubuntu /home/ubuntu/bootstrap.done
