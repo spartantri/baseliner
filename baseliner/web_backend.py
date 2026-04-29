@@ -131,7 +131,8 @@ def run_pipeline(job_id, target):
     jobs[job_id]["phase"] = "nmap"
     run([
         "nmap", "-iL", targets_file,
-        "--top-ports", "1000",
+        "-p", "1-65535",
+        "--max-retries", "0",
         "-sV", "-T4",
         "-oX", nmap_xml
     ])
